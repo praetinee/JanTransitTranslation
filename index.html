@@ -17,32 +17,34 @@
         .classic-shadow {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
-        select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1em;
+        /* Style for standard input datalist */
+        input::-webkit-calendar-picker-indicator {
+            display: none !important;
         }
     </style>
 </head>
 <body class="min-h-screen py-10 px-4 sm:px-6 lg:px-8">
 
     <div class="max-w-5xl mx-auto">
+        <!-- Header -->
         <header class="text-center mb-10 border-b border-gray-300 pb-6">
             <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 mb-2">วิเคราะห์ดวงดาวจร (เฉพาะบุคคล)</h1>
             <p class="text-lg text-gray-600">คำทำนายอ้างอิงจากโครงสร้างดวงเดิม ลัคนากุมภ์ (กระจุกดาว ธนู-กุมภ์)</p>
         </header>
 
+        <!-- Form Section -->
         <div class="bg-white rounded-lg classic-shadow p-6 sm:p-10 mb-8 border border-gray-200">
             <div class="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
                 <h2 class="text-xl font-medium text-gray-800 border-l-4 border-gray-800 pl-3">เลือกตำแหน่งและสถานะดาวจร</h2>
-                <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-md">ตั้งค่าเฉพาะดวงที่ต้องการวิเคราะห์</span>
+                <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-md hidden sm:inline-block">พิมพ์ชื่อราศีเพื่อค้นหา</span>
             </div>
             
             <form id="astroForm" class="space-y-6">
-                <!-- Dropdowns will be generated here by JavaScript -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6" id="dropdownContainer"></div>
+                <!-- Datalist for autocomplete suggestions -->
+                <datalist id="signs-datalist"></datalist>
+
+                <!-- Input grids will be generated here by JavaScript -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6" id="inputContainer"></div>
 
                 <div class="pt-8 border-t border-gray-100 flex justify-center sm:justify-end gap-4 mt-8">
                     <button type="button" onclick="resetForm()" class="px-6 py-2.5 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
@@ -55,6 +57,7 @@
             </form>
         </div>
 
+        <!-- Result Section -->
         <div id="resultSection" class="hidden">
             <h2 class="text-2xl font-medium mb-6 text-gray-800 text-center">ผลการวิเคราะห์</h2>
             <div id="resultContent" class="space-y-6">
@@ -93,14 +96,12 @@
         ];
 
         const statuses = [
-            { id: 'normal', name: 'โคจรปกติ' },
-            { id: 'retrograde', name: 'พักร์ (ถอยหลัง)' },
-            { id: 'stationary', name: 'มนท์ (หยุดนิ่ง/ช้า)' },
-            { id: 'fast', name: 'เสิร์ด (เดินเร็ว)' },
-            { id: 'combust', name: 'ดับ (ใกล้ดวงอาทิตย์)' }
+            { id: 'retrograde', name: 'พักร์', desc: 'พักร์ (ถอยหลัง): สิ่งที่ทำนายไว้จะเกิดความล่าช้า ล้มเลิกกลางคัน หรือเป็นปัญหาเก่าๆ ที่วนกลับมา', color: 'bg-orange-100 text-orange-800 border-orange-300' },
+            { id: 'stationary', name: 'มนท์', desc: 'มนท์ (หยุดนิ่ง/ช้า): สิ่งที่เกิดขึ้นจะยืดเยื้อ คาราคาซัง ไม่จบลงง่ายๆ ต้องใช้ความอดทนสูง', color: 'bg-yellow-100 text-yellow-800 border-yellow-300' },
+            { id: 'fast', name: 'เสิร์ด', desc: 'เสิร์ด (เดินเร็ว): เหตุการณ์จะเกิดขึ้นแบบปุบปับ ฉาบฉวย มาไวไปไว ขาดความยั่งยืน', color: 'bg-blue-100 text-blue-800 border-blue-300' },
+            { id: 'combust', name: 'ดับ', desc: 'ดับ (ใกล้ดวงอาทิตย์): สิ่งที่ทำนายไว้อาจไม่เกิดขึ้นจริง หรือเกิดขึ้นแบบลับๆ ถูกบดบังจนมองไม่เห็น', color: 'bg-purple-100 text-purple-800 border-purple-300' }
         ];
 
-        // Database - Rewritten with Custom Combos for Gemini, Leo, Sagittarius, Aquarius
         const astroData = {
             sun: {
                 aries: "อารมณ์ร้อนเดือดปุด ทะเลาะกับเพื่อนหรือเพื่อนร่วมงานรุนแรง (๑ ชน ๓ คู่ศัตรู) และให้ระวังอุบัติเหตุจากการเดินทางกะทันหัน",
@@ -245,53 +246,87 @@
         };
 
         window.onload = function() {
-            const container = document.getElementById('dropdownContainer');
+            // 1. Populate standard datalist once
+            const datalist = document.getElementById('signs-datalist');
+            signs.forEach(sign => {
+                const option = document.createElement('option');
+                option.value = `${sign.name} (${sign.house})`;
+                datalist.appendChild(option);
+            });
+
+            // 2. Generate form inputs and status tags
+            const container = document.getElementById('inputContainer');
             
             planets.forEach(planet => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'flex flex-col bg-gray-50 p-4 rounded-md border border-gray-100';
                 
+                // Header (Planet Name + Tags)
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'flex items-center justify-between mb-3';
+                
                 const label = document.createElement('label');
-                label.className = 'block text-sm font-semibold text-gray-800 mb-3 border-l-2 border-gray-800 pl-2';
+                label.setAttribute('for', `input-sign-${planet.id}`);
+                label.className = 'block text-sm font-semibold text-gray-800 border-l-2 border-gray-800 pl-2';
                 label.textContent = `${planet.name} (${planet.num})`;
-                
-                const inputGroup = document.createElement('div');
-                inputGroup.className = 'space-y-3';
 
-                // Sign Select
-                const signSelect = document.createElement('select');
-                signSelect.id = `select-sign-${planet.id}`;
-                signSelect.className = 'block w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-sm focus:border-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800 text-gray-700 classic-shadow transition-colors';
+                const tagsDiv = document.createElement('div');
+                tagsDiv.className = 'flex gap-1.5';
                 
-                const signDefault = document.createElement('option');
-                signDefault.value = '';
-                signDefault.textContent = '-- เลือกลงราศี --';
-                signSelect.appendChild(signDefault);
-                
-                signs.forEach(sign => {
-                    const option = document.createElement('option');
-                    option.value = sign.id;
-                    option.textContent = `${sign.name} (${sign.house})`;
-                    signSelect.appendChild(option);
-                });
+                const noteDiv = document.createElement('div');
+                noteDiv.id = `note-${planet.id}`;
+                noteDiv.className = 'hidden mb-3 text-xs p-2 rounded-md transition-all';
+                noteDiv.dataset.currentStatus = 'normal';
 
-                // Status Select
-                const statusSelect = document.createElement('select');
-                statusSelect.id = `select-status-${planet.id}`;
-                statusSelect.className = 'block w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-sm focus:border-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800 text-gray-600 shadow-sm transition-colors';
-                
+                // Create Status Tags
                 statuses.forEach(status => {
-                    const option = document.createElement('option');
-                    option.value = status.id;
-                    option.textContent = status.name;
-                    statusSelect.appendChild(option);
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'px-2 py-0.5 text-xs rounded-full border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 transition-colors focus:outline-none';
+                    btn.textContent = status.name;
+                    btn.dataset.statusId = status.id;
+                    
+                    btn.onclick = () => {
+                        const isCurrentlyActive = noteDiv.dataset.currentStatus === status.id;
+                        
+                        // Reset all buttons in this group
+                        const allBtns = tagsDiv.querySelectorAll('button');
+                        allBtns.forEach(b => {
+                            b.className = 'px-2 py-0.5 text-xs rounded-full border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 transition-colors focus:outline-none';
+                        });
+
+                        if (isCurrentlyActive) {
+                            // Turn off (revert to normal)
+                            noteDiv.dataset.currentStatus = 'normal';
+                            noteDiv.className = 'hidden';
+                        } else {
+                            // Turn on this status
+                            btn.className = `px-2 py-0.5 text-xs rounded-full border border-transparent text-white bg-gray-700 shadow-sm focus:outline-none`;
+                            noteDiv.dataset.currentStatus = status.id;
+                            noteDiv.className = `mb-3 text-xs p-2.5 rounded-md border ${status.color} transition-all`;
+                            noteDiv.textContent = status.desc;
+                        }
+                    };
+                    tagsDiv.appendChild(btn);
                 });
+
+                headerDiv.appendChild(label);
+                headerDiv.appendChild(tagsDiv);
+
+                // Autocomplete Input
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = `input-sign-${planet.id}`;
+                input.setAttribute('list', 'signs-datalist');
+                input.placeholder = 'พิมพ์ชื่อราศี หรือคลิกเลือก...';
+                input.className = 'block w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-3 text-sm focus:border-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800 text-gray-700 classic-shadow transition-colors';
                 
-                inputGroup.appendChild(signSelect);
-                inputGroup.appendChild(statusSelect);
-                
-                wrapper.appendChild(label);
-                wrapper.appendChild(inputGroup);
+                // For easy clearing text on click (optional UX enhancement)
+                input.onclick = function() { this.value = ''; }
+
+                wrapper.appendChild(headerDiv);
+                wrapper.appendChild(noteDiv);
+                wrapper.appendChild(input);
                 container.appendChild(wrapper);
             });
         };
@@ -304,49 +339,36 @@
             let hasSelection = false;
 
             planets.forEach(planet => {
-                const signSelect = document.getElementById(`select-sign-${planet.id}`);
-                const statusSelect = document.getElementById(`select-status-${planet.id}`);
-                const selectedSignValue = signSelect.value;
-                const selectedStatusValue = statusSelect.value;
+                const inputElement = document.getElementById(`input-sign-${planet.id}`);
+                const inputValue = inputElement.value.trim();
+                
+                // Find matching sign logic (allows full text or just the name like "เมษ" or "ราศีเมษ")
+                const signObj = signs.find(s => 
+                    `${s.name} (${s.house})` === inputValue || 
+                    s.name === inputValue || 
+                    s.name.replace('ราศี', '') === inputValue
+                );
 
-                if (selectedSignValue) {
+                if (signObj) {
                     hasSelection = true;
-                    const signObj = signs.find(s => s.id === selectedSignValue);
-                    let predictionText = astroData[planet.id][selectedSignValue];
+                    let predictionText = astroData[planet.id][signObj.id];
                     
-                    // Smart Note Logic
+                    // Read active status from the note div's dataset
+                    const noteDiv = document.getElementById(`note-${planet.id}`);
+                    const activeStatusId = noteDiv.dataset.currentStatus;
+                    
                     let smartNoteHtml = "";
-                    if (selectedStatusValue !== 'normal') {
-                        const statusObj = statuses.find(s => s.id === selectedStatusValue);
-                        let noteColor = "text-orange-700";
-                        let noteText = "";
-
-                        switch(selectedStatusValue) {
-                            case 'retrograde':
-                                noteText = "ดาวโคจรผิดปกติ (เดินถอยหลัง) ระวัง! สิ่งที่ทำนายไว้จะเกิดความล่าช้า ล้มเลิกกลางคัน หรือเป็นปัญหาเก่าๆ ที่วนกลับมาเกิดซ้ำ";
-                                break;
-                            case 'stationary':
-                                noteText = "ดาวโคจรผิดปกติ (หยุดนิ่ง) หมายเหตุ: สิ่งที่เกิดขึ้นจะยืดเยื้อ คาราคาซัง ไม่จบลงง่ายๆ ต้องใช้ความอดทนสูง";
-                                break;
-                            case 'fast':
-                                noteColor = "text-blue-700";
-                                noteText = "ดาวโคจรผิดปกติ (เดินเร็ว) หมายเหตุ: เหตุการณ์จะเกิดขึ้นแบบปุบปับ ฉาบฉวย มาไวไปไว ขาดความยั่งยืน";
-                                break;
-                            case 'combust':
-                                noteColor = "text-purple-700";
-                                noteText = "ดาวโคจรผิดปกติ (ดับแสง) ระวัง! สิ่งที่ทำนายไว้อาจไม่เกิดขึ้นจริง หรือเกิดขึ้นแบบลับๆ ถูกบดบังจนมองไม่เห็นผลลัพธ์ที่ชัดเจน";
-                                break;
-                        }
-
+                    if (activeStatusId !== 'normal') {
+                        const statusObj = statuses.find(s => s.id === activeStatusId);
                         smartNoteHtml = `
-                            <div class="mt-4 p-3 bg-gray-50 rounded border border-gray-200 text-sm">
-                                <span class="font-semibold ${noteColor}">📌 สถานะ ${statusObj.name}:</span> 
-                                <span class="text-gray-700">${noteText}</span>
+                            <div class="mt-4 p-3 rounded border text-sm ${statusObj.color}">
+                                <span class="font-semibold">📌 สถานะ ${statusObj.name}:</span> 
+                                <span>${statusObj.desc.split(':')[1].trim()}</span>
                             </div>
                         `;
                     }
                     
-                    const isWarning = predictionText.includes("ระวังขั้นสุด");
+                    const isWarning = predictionText.includes("ระวังขั้นสุด") || predictionText.includes("โคตรอันตราย");
                     const cardClass = isWarning 
                         ? 'bg-red-50 border-l-4 border-red-800 p-5 rounded-r-lg classic-shadow border border-y-red-100 border-r-red-100' 
                         : 'bg-white border-l-4 border-gray-800 p-5 rounded-r-lg classic-shadow border border-y-gray-200 border-r-gray-200';
@@ -372,7 +394,7 @@
             if (!hasSelection) {
                 resultContent.innerHTML = `
                     <div class="text-center p-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                        <p class="text-gray-500">กรุณาเลือกลงราศีอย่างน้อย 1 ดวง เพื่อดูคำทำนาย</p>
+                        <p class="text-gray-500">กรุณาพิมพ์หรือเลือกราศีอย่างน้อย 1 ดวง เพื่อดูคำทำนาย (เช่น พิมพ์ "เมษ" แล้วคลิกเลือก)</p>
                     </div>
                 `;
             }
@@ -383,8 +405,18 @@
 
         function resetForm() {
             planets.forEach(planet => {
-                document.getElementById(`select-sign-${planet.id}`).value = '';
-                document.getElementById(`select-status-${planet.id}`).value = 'normal';
+                document.getElementById(`input-sign-${planet.id}`).value = '';
+                
+                // Reset tags and notes
+                const noteDiv = document.getElementById(`note-${planet.id}`);
+                noteDiv.dataset.currentStatus = 'normal';
+                noteDiv.className = 'hidden';
+                
+                const tagsDiv = noteDiv.previousElementSibling;
+                const allBtns = tagsDiv.querySelectorAll('button');
+                allBtns.forEach(b => {
+                    b.className = 'px-2 py-0.5 text-xs rounded-full border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 transition-colors focus:outline-none';
+                });
             });
             const resultSection = document.getElementById('resultSection');
             resultSection.classList.add('hidden');
