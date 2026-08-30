@@ -27,6 +27,10 @@
         .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
+            cursor: grab; /* เพิ่มรูปเคอร์เซอร์มือจับ */
+        }
+        .hide-scrollbar:active {
+            cursor: grabbing; /* ตอนกดเมาส์ค้างให้เป็นรูปมือกำ */
         }
     </style>
 </head>
@@ -113,6 +117,7 @@
             // ระดับดีเยี่ยม (ให้คุณสูงสุด แรง เร็ว มั่นคง)
             { id: 'mahauot', name: 'มหาอุจจ์', desc: 'โดดเด่น ยิ่งใหญ่สุดขีด ให้ผลรวดเร็วและแรง', color: 'bg-green-100 text-green-800 border-green-300' },
             { id: 'kaset', name: 'เกษตร', desc: 'มั่นคง ถาวร เป็นปึกแผ่น รากฐานแน่น ไม่เปลี่ยนแปลงง่าย', color: 'bg-green-100 text-green-800 border-green-300' },
+            { id: 'kotom', name: 'โคตม', desc: 'โคตมนวางศ์ มีความเข้มแข็ง บริสุทธิ์ และมั่นคงขั้นสุด ทรงพลังเทียบเท่าเกษตร', color: 'bg-green-100 text-green-800 border-green-300' },
             { id: 'rachachok', name: 'ราชาโชค', desc: 'ผู้ใหญ่เมตตาอุปถัมภ์ ได้โชคมาง่ายๆ ฟลุคๆ ไม่ต้องเหนื่อย', color: 'bg-green-100 text-green-800 border-green-300' },
             { id: 'mahachak', name: 'มหาจักร', desc: 'ต้องบุกบั่นฝ่าฟัน เหนื่อยก่อนแล้วจึงจะประสบความสำเร็จยิ่งใหญ่', color: 'bg-green-100 text-green-800 border-green-300' },
             // ระดับดี (หนุนนำ ค่อยเป็นค่อยไป)
@@ -392,13 +397,46 @@
                 // เก็บสถานะ Tag ที่ถูกเลือกเป็น Array
                 dignityTagsDiv.dataset.selected = JSON.stringify([]);
 
+                // --- เพิ่มระบบเมาส์คลิกลาก (Drag to scroll) ---
+                let isDown = false;
+                let isDragging = false;
+                let startX;
+                let scrollLeft;
+
+                dignityTagsDiv.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    isDragging = false; // รีเซ็ตสถานะการลาก
+                    startX = e.pageX - dignityTagsDiv.offsetLeft;
+                    scrollLeft = dignityTagsDiv.scrollLeft;
+                });
+                
+                dignityTagsDiv.addEventListener('mouseleave', () => {
+                    isDown = false;
+                });
+                
+                dignityTagsDiv.addEventListener('mouseup', () => {
+                    isDown = false;
+                });
+                
+                dignityTagsDiv.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault(); // ป้องกันการคลุมดำ text
+                    const x = e.pageX - dignityTagsDiv.offsetLeft;
+                    const walk = (x - startX) * 2; // คูณ 2 เพื่อให้เลื่อนเมาส์นิดเดียวแต่ขยับไปได้ไกลขึ้น
+                    if (Math.abs(walk) > 5) isDragging = true; // ถ้าระยะลากเกิน 5px ให้ถือว่ากำลัง "ลาก" ไม่ใช่ "คลิก"
+                    dignityTagsDiv.scrollLeft = scrollLeft - walk;
+                });
+                // ---------------------------------------------
+
                 dignities.forEach(dig => {
                     const dBtn = document.createElement('button');
                     dBtn.type = 'button';
                     dBtn.className = 'shrink-0 px-2.5 py-1 text-[11px] rounded-full border border-gray-200 text-gray-600 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none whitespace-nowrap';
                     dBtn.textContent = dig.name;
                     
-                    dBtn.onclick = () => {
+                    dBtn.onclick = (e) => {
+                        if (isDragging) return; // ถ้าเป็นการลากเมาส์ ให้ข้ามการกดปุ่มไปเลย (กันคลิกลั่น)
+                        
                         let selected = JSON.parse(dignityTagsDiv.dataset.selected);
                         const index = selected.indexOf(dig.id);
                         
