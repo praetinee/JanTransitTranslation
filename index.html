@@ -278,8 +278,23 @@
                 noteDiv.className = 'hidden mb-3 text-xs p-2 rounded-md transition-all';
                 noteDiv.dataset.currentStatus = 'normal';
 
-                // Create Status Tags
-                statuses.forEach(status => {
+                let allowedStatuses = [];
+                if (['sun', 'rahu', 'ketu'].includes(planet.id)) {
+                    // อาทิตย์ ราหู เกตุ ไม่มี Tag
+                    allowedStatuses = [];
+                } else if (planet.id === 'moon') {
+                    // จันทร์ มีแค่ "ดับ"
+                    allowedStatuses = ['combust'];
+                } else if (planet.id === 'uranus') {
+                    // มฤตยู ไม่มี "ดับ"
+                    allowedStatuses = ['retrograde', 'stationary', 'fast'];
+                } else {
+                    // ดาวอื่นๆ (อังคาร พุธ พฤหัส ศุกร์ เสาร์) มีครบ
+                    allowedStatuses = ['retrograde', 'stationary', 'fast', 'combust'];
+                }
+
+                // Create Status Tags dynamically based on the filtered list
+                statuses.filter(s => allowedStatuses.includes(s.id)).forEach(status => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.className = 'px-2 py-0.5 text-xs rounded-full border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 transition-colors focus:outline-none';
