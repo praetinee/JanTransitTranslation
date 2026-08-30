@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jan's Transit</title>
+    <title>บันทึกดวงดาว - การโคจรและผลกระทบ (Custom Chart)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +21,13 @@
         input::-webkit-calendar-picker-indicator {
             display: none !important;
         }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="min-h-screen py-10 px-4 sm:px-6 lg:px-8">
@@ -28,7 +35,8 @@
     <div class="max-w-5xl mx-auto">
         <!-- Header -->
         <header class="text-center mb-10 border-b border-gray-300 pb-6">
-            <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 mb-2">Jan's Transit</h1>
+            <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 mb-2">วิเคราะห์ดวงดาวจร (เฉพาะบุคคล)</h1>
+            <p class="text-lg text-gray-600">คำทำนายอ้างอิงจากโครงสร้างดวงเดิม ลัคนากุมภ์ (กระจุกดาว ธนู-กุมภ์)</p>
         </header>
 
         <!-- Form Section -->
@@ -99,6 +107,30 @@
             { id: 'stationary', name: 'มนท์', desc: 'มนท์ (หยุดนิ่ง/ช้า): สิ่งที่เกิดขึ้นจะยืดเยื้อ คาราคาซัง ไม่จบลงง่ายๆ ต้องใช้ความอดทนสูง', color: 'bg-yellow-100 text-yellow-800 border-yellow-300' },
             { id: 'fast', name: 'เสิร์ด', desc: 'เสิร์ด (เดินเร็ว): เหตุการณ์จะเกิดขึ้นแบบปุบปับ ฉาบฉวย มาไวไปไว ขาดความยั่งยืน', color: 'bg-blue-100 text-blue-800 border-blue-300' },
             { id: 'combust', name: 'ดับ', desc: 'ดับ (ใกล้ดวงอาทิตย์): สิ่งที่ทำนายไว้อาจไม่เกิดขึ้นจริง หรือเกิดขึ้นแบบลับๆ ถูกบดบังจนมองไม่เห็น', color: 'bg-purple-100 text-purple-800 border-purple-300' }
+        ];
+
+        const dignities = [
+            // ระดับดีเยี่ยม (ให้คุณสูงสุด แรง เร็ว มั่นคง)
+            { id: 'mahauot', name: 'มหาอุจจ์', desc: 'โดดเด่น ยิ่งใหญ่สุดขีด ให้ผลรวดเร็วและแรง', color: 'bg-green-100 text-green-800 border-green-300' },
+            { id: 'kaset', name: 'เกษตร', desc: 'มั่นคง ถาวร เป็นปึกแผ่น รากฐานแน่น ไม่เปลี่ยนแปลงง่าย', color: 'bg-green-100 text-green-800 border-green-300' },
+            { id: 'rachachok', name: 'ราชาโชค', desc: 'ผู้ใหญ่เมตตาอุปถัมภ์ ได้โชคมาง่ายๆ ฟลุคๆ ไม่ต้องเหนื่อย', color: 'bg-green-100 text-green-800 border-green-300' },
+            { id: 'mahachak', name: 'มหาจักร', desc: 'ต้องบุกบั่นฝ่าฟัน เหนื่อยก่อนแล้วจึงจะประสบความสำเร็จยิ่งใหญ่', color: 'bg-green-100 text-green-800 border-green-300' },
+            // ระดับดี (หนุนนำ ค่อยเป็นค่อยไป)
+            { id: 'tevichok', name: 'เทวีโชค', desc: 'ได้รับความช่วยเหลือจากสตรี ได้โชคลาภความสำเร็จแบบนุ่มนวล', color: 'bg-teal-100 text-teal-800 border-teal-300' },
+            { id: 'ujjawilas', name: 'อุจจาวิลาส', desc: 'กำลังจะพุ่งขึ้นสู่จุดสูงสุด มีความเจริญก้าวหน้า บุญบารมีหนุนนำ', color: 'bg-teal-100 text-teal-800 border-teal-300' },
+            { id: 'ujjapimuk', name: 'อุจจาภิมุข', desc: 'พ้นจุดสูงสุดมาแล้ว แต่บารมียังคุ้มครองให้ร่มเย็น', color: 'bg-teal-100 text-teal-800 border-teal-300' },
+            { id: 'chullachak', name: 'จุลจักร', desc: 'มีความเจริญก้าวหน้าแบบค่อยเป็นค่อยไป เหนื่อยน้อยกว่ามหาจักร', color: 'bg-teal-100 text-teal-800 border-teal-300' },
+            { id: 'mulakaset', name: 'มูลเกษตร', desc: 'มีกำลังตั้งมั่นคล้ายเกษตร แต่ส่งผลรวดเร็วและรุนแรงกว่าเล็กน้อย', color: 'bg-teal-100 text-teal-800 border-teal-300' },
+            // เกณฑ์พิเศษ (ให้คุณโดดเด่นเฉพาะด้าน)
+            { id: 'udomken', name: 'อุดมเกณฑ์', desc: 'มีความอุดมสมบูรณ์ มั่งคั่ง ทรัพย์สินเงินทองไม่ขาดมือ', color: 'bg-blue-100 text-blue-800 border-blue-300' },
+            { id: 'patumken', name: 'ปทุมเกณฑ์', desc: 'มีเสน่ห์เมตตามหานิยมสูง เป็นที่รักใคร่เอ็นดูของผู้คน', color: 'bg-pink-100 text-pink-800 border-pink-300' },
+            { id: 'ruanken', name: 'เรือนเกณฑ์', desc: 'องค์เกณฑ์ - ดาวอยู่ในเกณฑ์ที่ทำให้ดวงชะตาเข้มแข็ง มั่นคง คุ้มภัยได้', color: 'bg-blue-100 text-blue-800 border-blue-300' },
+            // อ่อนกำลัง (พึ่งพา เสื่อม)
+            { id: 'pra', name: 'ประ', desc: 'อ่อนกำลัง ขาดความมั่นคง ต้องพึ่งพาผู้อื่นหรือระหกระเหินอยู่ต่างถิ่น', color: 'bg-orange-100 text-orange-800 border-orange-300' },
+            { id: 'nit', name: 'นิจ', desc: 'เสื่อมถอย ด้อยค่า หมดกำลัง ทำสิ่งใดก็มักไม่ค่อยขึ้น หรือได้มาก็รักษาไว้ไม่ได้', color: 'bg-orange-100 text-orange-800 border-orange-300' },
+            // ให้โทษรุนแรง (วิกฤต ตำหนิ)
+            { id: 'pintubat', name: 'พินทุบาทว์', desc: 'ดวงแตก มีตำหนิ เกิดทุกข์เรื้อรัง มักมีปัญหาครอบครัวหรือคู่ครอง', color: 'bg-red-100 text-red-800 border-red-300' },
+            { id: 'kart', name: 'ฆาต', desc: 'จุดอันตราย วิกฤตชีวิต ระวังอุบัติเหตุ คดีความ หรือเจ็บป่วยรุนแรง', color: 'bg-red-100 text-red-800 border-red-300' }
         ];
 
         const astroData = {
@@ -341,6 +373,64 @@
                 wrapper.appendChild(headerDiv);
                 wrapper.appendChild(noteDiv);
                 wrapper.appendChild(input);
+
+                const dignityWrapper = document.createElement('div');
+                dignityWrapper.className = 'mt-3 pt-3 border-t border-gray-100';
+                
+                const dignityLabel = document.createElement('div');
+                dignityLabel.className = 'text-xs text-gray-500 mb-2 flex items-center justify-between font-medium';
+                dignityLabel.innerHTML = `<span>⭐ มาตรฐาน/เกณฑ์ดาว (กดเลือกได้หลายอัน)</span>`;
+
+                const dignityTagsDiv = document.createElement('div');
+                dignityTagsDiv.id = `dignity-tags-${planet.id}`;
+                dignityTagsDiv.className = 'flex overflow-x-auto gap-1.5 pb-2 hide-scrollbar';
+                
+                const dignityNoteDiv = document.createElement('div');
+                dignityNoteDiv.id = `dignity-note-${planet.id}`;
+                dignityNoteDiv.className = 'space-y-1.5 mt-1';
+
+                // เก็บสถานะ Tag ที่ถูกเลือกเป็น Array
+                dignityTagsDiv.dataset.selected = JSON.stringify([]);
+
+                dignities.forEach(dig => {
+                    const dBtn = document.createElement('button');
+                    dBtn.type = 'button';
+                    dBtn.className = 'shrink-0 px-2.5 py-1 text-[11px] rounded-full border border-gray-200 text-gray-600 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none whitespace-nowrap';
+                    dBtn.textContent = dig.name;
+                    
+                    dBtn.onclick = () => {
+                        let selected = JSON.parse(dignityTagsDiv.dataset.selected);
+                        const index = selected.indexOf(dig.id);
+                        
+                        // Toggle Logic
+                        if (index > -1) {
+                            selected.splice(index, 1);
+                            dBtn.className = 'shrink-0 px-2.5 py-1 text-[11px] rounded-full border border-gray-200 text-gray-600 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none whitespace-nowrap';
+                        } else {
+                            selected.push(dig.id);
+                            dBtn.className = 'shrink-0 px-2.5 py-1 text-[11px] rounded-full border border-transparent text-white bg-gray-600 shadow-sm focus:outline-none whitespace-nowrap';
+                        }
+                        dignityTagsDiv.dataset.selected = JSON.stringify(selected);
+                        
+                        // Update Notes
+                        dignityNoteDiv.innerHTML = '';
+                        selected.forEach(selId => {
+                            const sObj = dignities.find(d => d.id === selId);
+                            const nDiv = document.createElement('div');
+                            nDiv.className = `text-[11px] p-2 rounded border ${sObj.color}`;
+                            nDiv.innerHTML = `<b>${sObj.name}:</b> ${sObj.desc}`;
+                            dignityNoteDiv.appendChild(nDiv);
+                        });
+                    };
+                    dignityTagsDiv.appendChild(dBtn);
+                });
+
+                dignityWrapper.appendChild(dignityLabel);
+                dignityWrapper.appendChild(dignityTagsDiv);
+                dignityWrapper.appendChild(dignityNoteDiv);
+
+                wrapper.appendChild(dignityWrapper);
+                
                 container.appendChild(wrapper);
             });
         };
@@ -374,12 +464,29 @@
                     let smartNoteHtml = "";
                     if (activeStatusId !== 'normal') {
                         const statusObj = statuses.find(s => s.id === activeStatusId);
-                        smartNoteHtml = `
+                        smartNoteHtml += `
                             <div class="mt-4 p-3 rounded border text-sm ${statusObj.color}">
                                 <span class="font-semibold">📌 สถานะ ${statusObj.name}:</span> 
                                 <span>${statusObj.desc.split(':')[1].trim()}</span>
                             </div>
                         `;
+                    }
+                    
+                    const dTagsDiv = document.getElementById(`dignity-tags-${planet.id}`);
+                    const selectedDignities = JSON.parse(dTagsDiv.dataset.selected || "[]");
+                    
+                    if (selectedDignities.length > 0) {
+                        smartNoteHtml += `<div class="mt-3 space-y-2">`;
+                        selectedDignities.forEach(digId => {
+                            const dObj = dignities.find(d => d.id === digId);
+                            smartNoteHtml += `
+                                <div class="p-3 rounded border text-sm ${dObj.color}">
+                                    <span class="font-semibold">✨ ${dObj.name}:</span> 
+                                    <span>${dObj.desc}</span>
+                                </div>
+                            `;
+                        });
+                        smartNoteHtml += `</div>`;
                     }
                     
                     const isWarning = predictionText.includes("ระวังขั้นสุด") || predictionText.includes("โคตรอันตราย");
@@ -431,6 +538,19 @@
                 allBtns.forEach(b => {
                     b.className = 'px-2 py-0.5 text-xs rounded-full border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 transition-colors focus:outline-none';
                 });
+
+                const dTagsDiv = document.getElementById(`dignity-tags-${planet.id}`);
+                if(dTagsDiv) {
+                    dTagsDiv.dataset.selected = JSON.stringify([]);
+                    const allDBtns = dTagsDiv.querySelectorAll('button');
+                    allDBtns.forEach(b => {
+                        b.className = 'shrink-0 px-2.5 py-1 text-[11px] rounded-full border border-gray-200 text-gray-600 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none whitespace-nowrap';
+                    });
+                }
+                const dNoteDiv = document.getElementById(`dignity-note-${planet.id}`);
+                if(dNoteDiv) {
+                    dNoteDiv.innerHTML = '';
+                }
             });
             const resultSection = document.getElementById('resultSection');
             resultSection.classList.add('hidden');
