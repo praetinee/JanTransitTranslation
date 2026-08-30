@@ -113,28 +113,91 @@
         ];
 
         const dignities = [
-            // ระดับดีเยี่ยม (Strong)
-            { id: 'mahauot', name: 'มหาอุจจ์', type: 'strong', specific: 'ให้ผลรวดเร็ว แรง และโดดเด่นสูงสุด', color: 'bg-green-50 text-green-800 border-green-200' },
-            { id: 'kaset', name: 'เกษตร', type: 'strong', specific: 'มีความมั่นคง ถาวร เป็นปึกแผ่น และเกิดขึ้นอย่างสม่ำเสมอ', color: 'bg-green-50 text-green-800 border-green-200' },
-            { id: 'kotom', name: 'โคตม', type: 'strong', specific: 'มีความเข้มแข็ง บริสุทธิ์ และมั่นคงขั้นสุด ทรงพลังเทียบเท่าหรือมากกว่าดาวเกษตร', color: 'bg-green-50 text-green-800 border-green-200' },
-            { id: 'rachachok', name: 'ราชาโชค', type: 'strong', specific: 'ได้รับความช่วยเหลือหรือได้มาอย่างง่ายดาย โดยไม่ต้องออกแรงเหนื่อยมาก', color: 'bg-green-50 text-green-800 border-green-200' },
-            { id: 'mahachak', name: 'มหาจักร', type: 'strong', specific: 'ต้องบุกบั่นฝ่าฟันอย่างหนักหน่วงและเหน็ดเหนื่อยก่อน จึงจะเห็นผลลัพธ์ที่ยิ่งใหญ่', color: 'bg-green-50 text-green-800 border-green-200' },
-            // ระดับดี (Strong - Moderate)
-            { id: 'tevichok', name: 'เทวีโชค', type: 'strong', specific: 'ได้รับความช่วยเหลือจากสตรี หรือได้โชคลาภความสำเร็จแบบค่อยเป็นค่อยไป', color: 'bg-teal-50 text-teal-800 border-teal-200' },
-            { id: 'ujjawilas', name: 'อุจจาวิลาส', type: 'strong', specific: 'มีความเจริญก้าวหน้ากำลังพุ่งขึ้นสู่จุดสูงสุด มีผู้ใหญ่หรือบารมีหนุนนำ', color: 'bg-teal-50 text-teal-800 border-teal-200' },
-            { id: 'ujjapimuk', name: 'อุจจาภิมุข', type: 'strong', specific: 'ผ่านจุดวิกฤตหรือจุดสูงสุดมาแล้ว แต่ผลกระทบหรือบารมียังคงส่งผลควันหลงอยู่', color: 'bg-teal-50 text-teal-800 border-teal-200' },
-            { id: 'chullachak', name: 'จุลจักร', type: 'strong', specific: 'มีความก้าวหน้าแบบค่อยเป็นค่อยไป ต้องออกแรงบ้างแต่เหนื่อยน้อยกว่ามหาจักร', color: 'bg-teal-50 text-teal-800 border-teal-200' },
-            { id: 'mulakaset', name: 'มูลเกษตร', type: 'strong', specific: 'มีกำลังตั้งมั่นคล้ายเกษตร แต่ส่งผลรวดเร็วและกระแทกกระทั้นกว่าเล็กน้อย', color: 'bg-teal-50 text-teal-800 border-teal-200' },
-            // เกณฑ์พิเศษ (Special Good)
-            { id: 'udomken', name: 'อุดมเกณฑ์', type: 'special', specific: 'มีความอุดมสมบูรณ์ มั่งคั่ง ทรัพย์สินเงินทองไม่ขาดมือ', color: 'bg-blue-50 text-blue-800 border-blue-200' },
-            { id: 'patumken', name: 'ปทุมเกณฑ์', type: 'special', specific: 'มีเสน่ห์เมตตามหานิยมสูง เป็นที่รักใคร่เอ็นดูของผู้คนรอบข้าง', color: 'bg-blue-50 text-blue-800 border-blue-200' },
-            { id: 'ruanken', name: 'เรือนเกณฑ์', type: 'special', specific: 'ดาวอยู่ในตำแหน่งองค์เกณฑ์ ทำให้ดวงชะตาเข้มแข็ง สามารถคุ้มครองภัยได้', color: 'bg-blue-50 text-blue-800 border-blue-200' },
-            // อ่อนกำลัง (Weak)
-            { id: 'pra', name: 'ประ', type: 'weak', specific: 'อ่อนกำลัง ขาดความมั่นคง ต้องพึ่งพาผู้อื่น ไม่สามารถจัดการด้วยตัวเองได้เต็มที่', color: 'bg-orange-50 text-orange-800 border-orange-200' },
-            { id: 'nit', name: 'นิจ', type: 'weak', specific: 'เสื่อมถอย ด้อยค่า หรือเกิดขึ้นเพียงชั่วคราวแล้วจางหายไป รักษาไว้ได้ยาก', color: 'bg-orange-50 text-orange-800 border-orange-200' },
-            // ให้โทษรุนแรง (Special Bad)
-            { id: 'pintubat', name: 'พินทุบาทว์', type: 'special_bad', specific: 'ดวงแตก มีตำหนิ เกิดปัญหาเรื้อรัง มักมีประเด็นเรื่องครอบครัวหรือคู่ครองให้ต้องแก้ไข', color: 'bg-red-50 text-red-800 border-red-200' },
-            { id: 'kart', name: 'ฆาต', type: 'special_bad', specific: 'จุดอันตราย วิกฤตชีวิต ระวังอุบัติเหตุ คดีความ หรือเจ็บป่วยรุนแรงขั้นแตกหัก', color: 'bg-red-50 text-red-800 border-red-200' }
+            { 
+                id: 'mahauot', name: 'มหาอุจจ์', type: 'strong',
+                good_desc: 'ให้ผลรวดเร็ว แรง ทรงพลัง และโดดเด่นพุ่งทะยานถึงขีดสุด',
+                bad_desc: 'เหตุการณ์จะเกิดขึ้นแบบสเกลใหญ่ กระแทกกระทั้น สะเทือนวงกว้าง และรุนแรงสูงสุด'
+            },
+            { 
+                id: 'kaset', name: 'เกษตร', type: 'strong',
+                good_desc: 'สิ่งดีๆ ที่ทำนายไว้จะเกิดขึ้นอย่างมั่นคง ถาวร เป็นปึกแผ่น และส่งผลดีอย่างสม่ำเสมอในระยะยาว',
+                bad_desc: 'ปัญหาหรือความพินาศนั้นจะฝังรากลึก เรื้อรัง และแก้ได้ยาก กลายเป็นปัญหาติดตัวยาวนาน'
+            },
+            { 
+                id: 'kotom', name: 'โคตม', type: 'strong',
+                good_desc: 'มีความเข้มแข็ง บริสุทธิ์ และมั่นคงขั้นสุด ทรงพลังเทียบเท่าหรือมากกว่าดาวเกษตร',
+                bad_desc: 'ปัญหามีความสลับซับซ้อนและเกาะกินลึกซึ้ง ยากที่จะถอนรากถอนโคนให้จบลงโดยง่าย'
+            },
+            { 
+                id: 'ujjawilas', name: 'อุจจาวิลาส', type: 'strong',
+                good_desc: 'ผลลัพธ์กำลังพุ่งทะยานเข้าสู่จุดสูงสุด มีบารมีหรือผู้ใหญ่คอยหนุนนำให้สำเร็จอย่างรวดเร็ว',
+                bad_desc: 'ปัญหาความวุ่นวายกำลังก่อตัวรุนแรงขึ้นเรื่อยๆ ไปสู่จุดแตกหัก ต้องเตรียมรับแรงกระแทก'
+            },
+            { 
+                id: 'ujjapimuk', name: 'อุจจาภิมุข', type: 'strong',
+                good_desc: 'สิ่งที่ทำนายไว้กำลังผ่านจุดสูงสุดมาแล้ว แต่ผลกระทบหรือบารมียังคงส่งผลควันหลงในทางที่ดีอยู่อย่างต่อเนื่อง',
+                bad_desc: 'ปัญหาหรือวิกฤตที่หนักหน่วงที่สุดได้ผ่านพ้นไปแล้ว แต่ยังคงทิ้งร่องรอยหรือควันหลงของความเสียหายให้ต้องตามแก้'
+            },
+            { 
+                id: 'mahachak', name: 'มหาจักร', type: 'effort',
+                good_desc: 'ประสบความสำเร็จที่ยิ่งใหญ่และน่าภาคภูมิใจ แต่ต้องผ่านการบุกบั่น ฝ่าฟัน และเหน็ดเหนื่อยอย่างหนักหน่วงมาก่อน',
+                bad_desc: 'ต้องเผชิญหน้ากับอุปสรรคที่ต้องออกแรงสู้ยิบตา ต้องเหนื่อยกายเหนื่อยใจอย่างหนักก่อนที่สถานการณ์จะคลี่คลาย'
+            },
+            { 
+                id: 'chullachak', name: 'จุลจักร', type: 'effort',
+                good_desc: 'มีความก้าวหน้าแบบค่อยเป็นค่อยไป ต้องออกแรงบ้างแต่เหนื่อยน้อยกว่ามหาจักร',
+                bad_desc: 'มีอุปสรรคมาขัดขวางให้ต้องเหนื่อยออกแรงแก้ปัญหา แต่เมื่อลงมือทำแล้วจะสามารถจัดการให้จบลงได้'
+            },
+            { 
+                id: 'rachachok', name: 'ราชาโชค', type: 'smooth',
+                good_desc: 'ได้รับความช่วยเหลือ หรือได้โชคลาภความสำเร็จมาอย่างง่ายดายโดยไม่ต้องออกแรงเหนื่อยมาก',
+                bad_desc: 'แม้จะมีวิกฤตหรือปัญหาเกิดขึ้น แต่จะมีช่องทางรอดแบบฟลุคๆ หรือมีผู้ใหญ่ยื่นมือเข้ามาช่วยไกล่เกลี่ย'
+            },
+            { 
+                id: 'tevichok', name: 'เทวีโชค', type: 'smooth',
+                good_desc: 'จะได้รับการอุปถัมภ์จากสตรี หรือได้โชคลาภความสำเร็จมาแบบนุ่มนวล ค่อยเป็นค่อยไปแต่มั่นคง',
+                bad_desc: 'แม้จะเกิดปัญหารุนแรง แต่มักจะได้รับความช่วยเหลือจากผู้ใหญ่เพศหญิงให้แคล้วคลาด หรืออีกนัยคือวิกฤตนั้นมีสตรีเป็นต้นเหตุ'
+            },
+            { 
+                id: 'patumken', name: 'ปทุมเกณฑ์', type: 'smooth',
+                good_desc: 'มีเสน่ห์เมตตามหานิยมสูง เป็นที่รักใคร่เอ็นดูของผู้คนรอบข้าง ดึงดูดทรัพย์และโอกาส',
+                bad_desc: 'ปัญหาที่เกิดขึ้นมักมาจากเรื่องความรัก ความลุ่มหลง หรือเสน่ห์ที่นำพาความวุ่นวายมาให้ แต่จะรอดพ้นได้ด้วยการเจรจา'
+            },
+            { 
+                id: 'udomken', name: 'อุดมเกณฑ์', type: 'smooth',
+                good_desc: 'มีความอุดมสมบูรณ์ มั่งคั่ง ทรัพย์สินเงินทองไม่ขาดมือ ก่อเกิดผลประโยชน์งอกเงย',
+                bad_desc: 'แม้จะสูญเสียหรือมีรายจ่ายหนักหน่วง แต่จะมีทรัพย์สินหรือโชคลาภอีกทางเข้ามาทดแทน เยียวยาความเสียหายได้'
+            },
+            { 
+                id: 'ruanken', name: 'เรือนเกณฑ์', type: 'smooth',
+                good_desc: 'ดาวอยู่ในตำแหน่งองค์เกณฑ์ ทำให้ดวงชะตาเข้มแข็ง ฐานะและหน้าที่การงานมั่นคง',
+                bad_desc: 'ดาวมีเกณฑ์คุ้มครองภัย แม้เจอมรสุมชีวิตหนักแค่ไหน โครงสร้างหลักของชีวิตหรือครอบครัวก็จะไม่พังทลาย'
+            },
+            { 
+                id: 'mulakaset', name: 'มูลเกษตร', type: 'strong',
+                good_desc: 'มีกำลังตั้งมั่นคล้ายดาวเกษตร แต่ส่งผลรวดเร็วและเป็นรูปธรรมชัดเจนกว่าเล็กน้อย',
+                bad_desc: 'เป็นปัญหาหรือภาระที่ฝังตัวอยู่ลึกๆ และพร้อมจะปะทุขึ้นมาสร้างความเดือดร้อนได้ทุกเมื่อหากถูกกระตุ้น'
+            },
+            { 
+                id: 'pra', name: 'ประ', type: 'weak',
+                good_desc: 'สิ่งที่ได้มาจะไม่เต็มเม็ดเต็มหน่วย ได้มาแบบชั่วคราว รักษาเอาไว้ได้ยาก หรือต้องพึ่งพาผู้อื่นจึงจะสำเร็จ',
+                bad_desc: 'นับเป็นความโชคดีในความโชคร้าย เพราะปัญหาหรือเคราะห์กรรมนั้นจะเบาบางลง เป็นเพียงความวุ่นวายจุกจิกชั่วคราว'
+            },
+            { 
+                id: 'nit', name: 'นิจ', type: 'weak',
+                good_desc: 'เสื่อมถอย ด้อยค่า ขาดกำลังหนุนหลัง หากมีความสำเร็จก็มักจะเกิดขึ้นเพียงชั่วคราวแล้วจางหายไป',
+                bad_desc: 'ปัญหาที่ประดังเข้ามาจะเป็นเพียงเรื่องกวนใจเล็กน้อย ศัตรูอ่อนแอไร้น้ำยา ไม่สามารถสร้างความเสียหายใหญ่โตได้'
+            },
+            { 
+                id: 'pintubat', name: 'พินทุบาทว์', type: 'bad',
+                good_desc: 'แม้ภาพรวมจะมีเรื่องดีเข้ามา แต่จะแฝงไปด้วยรอยตำหนิ ความยุ่งยาก หรือปัญหาเรื้อรังภายในครอบครัวตามมาเสมอ',
+                bad_desc: 'ดวงแตก มีตำหนิ เกิดปัญหาเรื้อรัง มักมีประเด็นเรื่องมือที่สาม คู่ครอง หรือการขัดแย้งที่สร้างความร้าวฉานฝังลึก'
+            },
+            { 
+                id: 'kart', name: 'ฆาต', type: 'bad',
+                good_desc: 'จะรอดพ้นจากช่วงเวลาที่อันตรายที่สุดมาได้อย่างหวุดหวิด เหมือนตายแล้วเกิดใหม่',
+                bad_desc: 'จุดวิกฤตขั้นอันตรายสูงสุด มีเกณฑ์เกิดอุบัติเหตุ คดีความ การแตกหัก หรือความเสียหายขั้นเด็ดขาดที่ต้องระมัดระวังให้มาก'
+            }
         ];
 
         const astroData = {
@@ -294,7 +357,6 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'flex flex-col bg-gray-50 p-4 rounded-md border border-gray-100';
                 
-                // Header (Planet Name + Tags)
                 const headerDiv = document.createElement('div');
                 headerDiv.className = 'flex items-center justify-between mb-3';
                 
@@ -313,20 +375,15 @@
 
                 let allowedStatuses = [];
                 if (['sun', 'rahu', 'ketu'].includes(planet.id)) {
-                    // อาทิตย์ ราหู เกตุ ไม่มี Tag
                     allowedStatuses = [];
                 } else if (planet.id === 'moon') {
-                    // จันทร์ มีแค่ "ดับ"
                     allowedStatuses = ['combust'];
                 } else if (planet.id === 'uranus') {
-                    // มฤตยู ไม่มี "ดับ"
                     allowedStatuses = ['retrograde', 'stationary', 'fast'];
                 } else {
-                    // ดาวอื่นๆ มีครบ
                     allowedStatuses = ['retrograde', 'stationary', 'fast', 'combust'];
                 }
 
-                // Create Status Tags dynamically based on the filtered list
                 statuses.filter(s => allowedStatuses.includes(s.id)).forEach(status => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
@@ -337,7 +394,6 @@
                     btn.onclick = () => {
                         const isCurrentlyActive = noteDiv.dataset.currentStatus === status.id;
                         
-                        // Reset all buttons in this group
                         const allBtns = tagsDiv.querySelectorAll('button');
                         allBtns.forEach(b => {
                             b.className = 'px-2 py-0.5 text-xs rounded-full border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 transition-colors focus:outline-none';
@@ -359,7 +415,6 @@
                 headerDiv.appendChild(label);
                 headerDiv.appendChild(tagsDiv);
 
-                // Autocomplete Input
                 const input = document.createElement('input');
                 input.type = 'text';
                 input.id = `input-sign-${planet.id}`;
@@ -382,11 +437,8 @@
                 const dignityTagsDiv = document.createElement('div');
                 dignityTagsDiv.id = `dignity-tags-${planet.id}`;
                 dignityTagsDiv.className = 'flex overflow-x-auto gap-1.5 pb-2 hide-scrollbar';
-                
-                // Keep selected tags state
                 dignityTagsDiv.dataset.selected = JSON.stringify([]);
 
-                // Drag to scroll logic
                 let isDown = false;
                 let isDragging = false;
                 let startX;
@@ -454,7 +506,6 @@
                 const inputElement = document.getElementById(`input-sign-${planet.id}`);
                 const inputValue = inputElement.value.trim();
                 
-                // Match sign logic
                 const signObj = signs.find(s => 
                     `${s.name} (${s.house})` === inputValue || 
                     s.name === inputValue || 
@@ -487,29 +538,19 @@
                         smartNoteHtml += `<div class="mt-3 space-y-2">`;
                         selectedDignities.forEach(digId => {
                             const dObj = dignities.find(d => d.id === digId);
-                            let interpretation = "";
+                            let interpretation = isWarning ? dObj.bad_desc : dObj.good_desc;
                             
-                            // Smart Weight System Logic
-                            if (dObj.type === 'strong') {
-                                if (isWarning) {
-                                    interpretation = `ขยายสเกลความรุนแรง: ปัญหาหรือเรื่องร้ายที่ทำนายไว้จะเกิดขึ้นแบบสเกลใหญ่และส่งผลกระทบชัดเจน โดยมีลักษณะเฉพาะคือ ${dObj.specific}`;
-                                } else {
-                                    interpretation = `ขยายสเกลผลลัพธ์: สิ่งที่ทำนายไว้จะส่งผลดีเลิศและชัดเจนมาก โดยมีลักษณะเฉพาะคือ ${dObj.specific}`;
-                                }
-                            } else if (dObj.type === 'weak') {
-                                if (isWarning) {
-                                    interpretation = `ลดทอนความรุนแรง: โชคดีที่เรื่องร้ายถูกลดทอนกำลังลง ปัญหาจะเบาบางลงหรือจัดการได้ง่ายขึ้น โดยมีลักษณะคือ ${dObj.specific}`;
-                                } else {
-                                    interpretation = `ลดทอนผลลัพธ์: สิ่งที่ทำนายไว้จะไม่เต็มเม็ดเต็มหน่วย ต้องเหนื่อยกว่าปกติหรือได้มาแล้วเสียไป โดยมีลักษณะคือ ${dObj.specific}`;
-                                }
-                            } else {
-                                // special or special_bad
-                                interpretation = dObj.specific; 
-                            }
+                            // Style determination based on dignity type for the UI box
+                            let dColorClass = 'bg-gray-50 text-gray-800 border-gray-200';
+                            if (dObj.type === 'strong') dColorClass = 'bg-green-50 text-green-900 border-green-200';
+                            else if (dObj.type === 'smooth') dColorClass = 'bg-blue-50 text-blue-900 border-blue-200';
+                            else if (dObj.type === 'effort') dColorClass = 'bg-teal-50 text-teal-900 border-teal-200';
+                            else if (dObj.type === 'weak') dColorClass = 'bg-orange-50 text-orange-900 border-orange-200';
+                            else if (dObj.type === 'bad') dColorClass = 'bg-red-50 text-red-900 border-red-200';
 
                             smartNoteHtml += `
-                                <div class="p-3 rounded border text-sm ${dObj.color}">
-                                    <span class="font-semibold">${dObj.name}:</span> 
+                                <div class="p-3 rounded border text-sm ${dColorClass}">
+                                    <span class="font-semibold">ผลจากเกณฑ์ ${dObj.name}:</span> 
                                     <span>${interpretation}</span>
                                 </div>
                             `;
@@ -555,7 +596,6 @@
             planets.forEach(planet => {
                 document.getElementById(`input-sign-${planet.id}`).value = '';
                 
-                // Reset standard tags
                 const noteDiv = document.getElementById(`note-${planet.id}`);
                 noteDiv.dataset.currentStatus = 'normal';
                 noteDiv.className = 'hidden';
@@ -566,7 +606,6 @@
                     b.className = 'px-2 py-0.5 text-xs rounded-full border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 transition-colors focus:outline-none';
                 });
 
-                // Reset dignity tags
                 const dTagsDiv = document.getElementById(`dignity-tags-${planet.id}`);
                 if(dTagsDiv) {
                     dTagsDiv.dataset.selected = JSON.stringify([]);
